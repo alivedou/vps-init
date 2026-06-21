@@ -469,6 +469,37 @@ do_change_ssh_port() {
     fi
 }
 
+# ---- 实用脚本 ----
+do_scripts() {
+    while true; do
+        clear
+        echo -e "${skyblue}==================== 实用脚本 ====================${re}"
+        echo -e "${white}以下脚本来自第三方作者，本站仅提供快捷入口${re}"
+        echo -e "${purple}------------------------------------------------------${re}"
+        echo -e "${green} 1. 硬件检测（xykt/HardwareQuality）${re}"
+        echo -e "${yellow}    └ CPU/内存/磁盘/网络综合跑分${re}"
+        echo -e "${green} 2. IP 质量（xykt/IPQuality）${re}"
+        echo -e "${yellow}    └ IP 黑名单/欺诈分/出口类型检测${re}"
+        echo -e "${green} 3. 流媒体解锁（xykt/RegionRestrictionCheck）${re}"
+        echo -e "${yellow}    └ 检测 Netflix/Disney+/YouTube 等解锁情况${re}"
+        echo -e "${green} 4. 自定义脚本（输入 URL）${re}"
+        echo -e "${yellow}    └ 手动粘贴任意脚本直链运行${re}"
+        echo -e "${purple}------------------------------------------------------${re}"
+        echo -e "${skyblue} 0. 返回主菜单${re}"
+        echo -e "${purple}------------------------------------------------------${re}"
+        read -p $'\033[1;91m请选择: \033[0m' c
+        case $c in
+            1) bash <(curl -fsSL https://raw.githubusercontent.com/xykt/HardwareQuality/main/hardware.sh) ;;
+            2) bash <(curl -fsSL https://raw.githubusercontent.com/xykt/IPQuality/main/ip.sh) ;;
+            3) bash <(curl -fsSL https://raw.githubusercontent.com/xykt/RegionRestrictionCheck/main/check.sh) ;;
+            4) read -p "脚本直链 URL: " url; [ -n "$url" ] && bash <(curl -fsSL "$url") ;;
+            0) return ;;
+            *) echo -e "${red}无效选择${re}"; continue ;;
+        esac
+        echo ""; read -p "按回车继续..." _
+    done
+}
+
 # ---- 一键全装 ----
 do_all() {
     echo -e "${yellow}一键全装：更新 + 基础工具 + 时区 + UFW + fail2ban + Docker${re}"
@@ -569,6 +600,7 @@ main_menu() {
         echo -e "${green} 2. 系统更新                   6. 一键全装（基础）${re}"
         echo -e "${green} 3. 组件管理 ▶                 7. 防火墙管理 ▶${re}"
         echo -e "${green} 4. Docker 环境 ▶              8. 服务管理 ▶${re}"
+        echo -e "${green}                               9. 实用脚本 ▶${re}"
         echo "-------------------------------------------------------------------"
         echo -e "${green}00. 脚本更新${red}                  88. 退出脚本${re}"
         echo -e "${yellow}-------------------------------------------------------------------${re}"
@@ -583,6 +615,7 @@ main_menu() {
             6) do_all; echo ""; read -p "按回车返回主菜单..." _ ;;
             7) do_firewall ;;
             8) do_service ;;
+            9) do_scripts ;;
             00) self_update; echo ""; read -p "按回车返回主菜单..." _ ;;
             88) echo -e "${green}Bye!${re}"; exit 0 ;;
             *) echo -e "${red}无效选择${re}"; continue ;;

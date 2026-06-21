@@ -146,11 +146,12 @@ self_update() {
 
 # 安装快捷指令
 install_shortcut() {
-    local script_path="/usr/local/bin/init"
-    if [ ! -L "$script_path" ] || [ "$(readlink "$script_path" 2>/dev/null)" != "$0" ]; then
-        if ln -sf "$0" "$script_path" 2>/dev/null; then
-            echo -e "${green}快捷指令已设置：${yellow}init${re}"
-        fi
+    local script_path="/usr/local/bin/adou"
+    local self
+    self="$(cd "$(dirname "$0")" && pwd)/$(basename "$0")"
+    mkdir -p /usr/local/bin
+    if [ ! -L "$script_path" ] || [ "$(readlink -f "$script_path" 2>/dev/null)" != "$self" ]; then
+        ln -sf "$self" "$script_path" 2>/dev/null && echo -e "${green}快捷指令已设置：${yellow}adou${re}"
     fi
 }
 
@@ -548,6 +549,7 @@ do_service() {
 # ====================== 主菜单 ======================
 
 main_menu() {
+    install_shortcut  # 首次运行自动创建 init 快捷指令
     while true; do
         clear
         local ipv4=$(curl -s -m 2 ipv4.ip.sb 2>/dev/null)
@@ -561,7 +563,7 @@ main_menu() {
         echo ""
         echo -e "                 ${yellow}VPS 初始化工具 ${SCRIPT_VERSION}${re}"
         echo -e "${yellow}系统: $os | Init: $INIT_TYPE${re}"
-        echo -e "${skyblue}快捷指令 ${yellow}init${skyblue}（下次直接输入 init 启动）${re}"
+        echo -e "${skyblue}快捷指令 ${yellow}adou${skyblue}（下次直接输入 adou 启动）${re}"
         echo "-------------------------------------------------------------------"
         echo -e "${green} 1. 系统信息                   5. SSH 加固 ▶${re}"
         echo -e "${green} 2. 系统更新                   6. 一键全装（基础）${re}"

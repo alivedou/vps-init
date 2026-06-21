@@ -39,6 +39,12 @@ curl -sSfL https://raw.githubusercontent.com/alivedou/vps-init/main/init.sh -o i
 wget -qO init.sh https://raw.githubusercontent.com/alivedou/vps-init/main/init.sh && chmod +x init.sh && ./init.sh
 ```
 
+### 极简系统（无 curl/wget）
+
+```bash
+apt update && apt install curl -y && curl -sSfL https://raw.githubusercontent.com/alivedou/vps-init/main/init.sh -o init.sh && chmod +x init.sh && ./init.sh
+```
+
 ### 本地使用
 
 ```bash
@@ -70,13 +76,13 @@ sudo ./init.sh
 ### 3. 组件管理
 
 - **1. UFW 防火墙**（22/80/443）
-- **2. 基础工具**（curl / git / vim / tmux / jq / rsync / unzip / locales / screen）
+- **2. 基础工具**（curl / git / vim / nano / tmux / jq / rsync / unzip / locales / screen）
 - **3. fail2ban**（5 次失败封 1 小时）
 - **4. 安装指定工具**（空格分隔多个包名）
-- **5. shell 别名**（`ll` / `dps` / `di` / `dlog` / `dex` / `dprune` / `gs` / `gp` / `ports`）
-- **6. 创建 /work 目录**
-- **7. 时区 → Asia/Shanghai**
-- **8. 卸载指定组件**（带 Y/N 确认）
+- **5. 创建 /work 目录**
+- **6. 时区 → Asia/Shanghai**
+- **7. 卸载指定组件**（带 Y/N 确认）
+- **8. 选项说明**（查看每个选项的作用）
 - **0. 返回主菜单**
 
 ### 4. Docker 环境
@@ -105,9 +111,9 @@ sudo ./init.sh
 
 ### 7. 防火墙管理
 
-- **1. 放行端口**（支持 `8080` 或 `8000:9000/tcp`）
-- **2. 拒绝端口**
-- **3. 查看规则**（带编号）
+- **1. 放行端口**（支持 `8080` 或 `8000:9000/tcp`，可选备注）
+- **2. 拒绝端口**（可选备注）
+- **3. 查看规则**（带编号 + 备注）
 - **4. 删除规则**（按编号）
 - **5. 重载 UFW**
 - **6. 启用/禁用 UFW**
@@ -129,10 +135,9 @@ sudo ./init.sh
 1. 系统更新（apt update + upgrade + autoremove）
 2. 基础工具 + locale（en_US / zh_CN）
 3. 时区 → Asia/Shanghai
-4. shell 别名
-5. UFW 防火墙（22/80/443）
-6. fail2ban
-7. Docker CE + 镜像加速
+4. UFW 防火墙（22/80/443）
+5. fail2ban
+6. Docker CE + 镜像加速
 
 **不含** SSH 加固（避免断连），完成后进菜单 5 单独操作。
 
@@ -215,7 +220,6 @@ init
 | sshd_config 备份 | `/etc/ssh/sshd_config.bak.YYYYMMDDhhmmss` |
 | fail2ban 配置 | `/etc/fail2ban/jail.local` |
 | Docker daemon 配置 | `/etc/docker/daemon.json` |
-| shell 别名 | `/root/.bashrc` 末尾（带 marker 幂等） |
 | locale | `/etc/locale.gen`（启用 en_US / zh_CN） |
 | 工作目录 | `/work` |
 
@@ -223,7 +227,8 @@ init
 
 ## 常见问题
 
-**Q: 跑完后怎么重新进脚本？**
+**Q: 全新 VPS 没 curl 也没 wget 怎么办？**
+A: `apt update && apt install curl -y` 先装 curl，再拉脚本。极简 Debian 快速开始里有完整命令。
 A: 直接 `init`，或者 `bash /path/to/init.sh`。
 
 **Q: 脚本会偷偷重启服务吗？**
